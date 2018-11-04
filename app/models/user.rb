@@ -6,9 +6,10 @@ class User < ApplicationRecord
 
   after_initialize :set_default_role, if: :new_record?
 
-  devise :database_authenticatable,
-         :recoverable, :rememberable, :trackable, :validatable,
+  devise :database_authenticatable,:recoverable, :rememberable, :trackable,
          :omniauthable, omniauth_providers: [:google_oauth2]
+
+  dragonfly_accessor :photo
 
   def set_default_role
     self.role ||= :user
@@ -18,10 +19,11 @@ class User < ApplicationRecord
     where(provider: auth.provider, uid: auth.uid).first_or_initialize.tap do |user|
       user.provider = auth.provider
       user.uid = auth.uid
-      user.name = auth.info.name
+      user.first_name = auth.info.first_name
       user.email = auth.info.email
       user.token = auth.credentials.token
       user.expires_at = Time.at(auth.credentials.expires_at)
+      user.photo_url = auth.info.image
       user.save!
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_20_180709) do
+ActiveRecord::Schema.define(version: 2018_11_04_171104) do
 
   create_table "adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "date"
@@ -116,6 +116,8 @@ ActiveRecord::Schema.define(version: 2018_09_20_180709) do
     t.string "token"
     t.integer "expires_at"
     t.string "date_format"
+    t.string "photo_uid"
+    t.string "photo_name"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

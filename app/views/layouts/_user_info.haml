@@ -1,6 +1,9 @@
 .sidebar-profile.flex-column.text-center.pb-3.mb-3.border-bottom
   .my-3.profile-user-pic.d-block
-    = image_tag(image_path('profile-empty'), class: 'rounded-circle w-75')
+    - if current_user.photo_stored?
+      = image_tag(current_user.photo.url, class: 'rounded-circle w-75')
+    - else  
+      = image_tag('profile-empty', class: 'rounded-circle w-75')
   .profile-user-title.font-weight-bold
     = current_user.name
   .profile-user-role.font-weight-bold.text-uppercase
