@@ -1,0 +1,46 @@
+= form_for [:admin, @profile], url: profile_path(@profile), html: { class: 'w-100' } do |f|
+  .d-flex.w-100
+    - if @profile.errors.any?
+      #error_explanation
+        %h2= "#{pluralize(@profile.errors.count, "error")} prohibited this user from being saved:"
+        %ul
+          - @profile.errors.full_messages.each do |message|
+            %li= message
+
+  .d-flex.flex-row
+    .justify-content-start.w-50.pr-4
+      .d-flex.flex-column
+        .flex-row.d-inline-flex
+          .flex-input-item.flex-fill
+            .form-group
+              = f.label :email
+              = f.email_field :email, class: 'form-control', readonly: true
+
+          .flex-input-item.flex-fill
+            .form-group
+              = f.label :first_name
+              = f.text_field :first_name, class: 'form-control'
+
+          .flex-input-item.flex-fill
+            .form-group
+              = f.label :last_name
+              = f.text_field :last_name, class: 'form-control'
+
+        .flex-row.d-inline-flex
+          .flex-input-item.flex-fill
+            .form-group
+              = f.label :role
+              = f.select :role, User.roles.keys.map {|role| [role.titleize,role]}, {}, class: 'form-control'
+          .flex-input-item.flex-fill
+            .form-group
+              = f.label :password
+              = f.password_field :password, class: 'form-control'
+          .flex-input-item.flex-fill
+            .form-group
+              = f.label :password_confirmation
+              = f.password_field :password_confirmation, class: 'form-control'
+              -#= f.hidden_field :source, :profile
+
+  .d-flex.flex-row.form-actions.w-100
+    = link_to 'Back', admin_users_path, class: 'btn btn-dark'
+    = f.submit 'Save', class: 'btn btn-success'

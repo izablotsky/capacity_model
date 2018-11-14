@@ -7,7 +7,7 @@ class UserPolicy
   end
 
   def index?
-    true
+    @current_user.admin?
   end
 
   def show?
@@ -15,11 +15,11 @@ class UserPolicy
   end
 
   def new?
-    true
+    @current_user.admin?
   end
 
   def create?
-    true
+    @current_user.admin?
   end
 
   def update?
@@ -27,7 +27,7 @@ class UserPolicy
   end
 
   def destroy?
-    true
+    @current_user.admin?
   end
 
 end

@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-class UsersController < ApplicationController
-  include Pundit
-
+class Admin::UsersController < ApplicationController
   before_action :authenticate_user!
   after_action :verify_authorized
 
@@ -25,9 +23,9 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     authorize @user
     if @user.update_attributes(secure_params)
-      redirect_to users_path, notice: 'User updated.'
+      redirect_to admin_users_path, notice: 'User updated.'
     else
-      redirect_to users_path, alert: 'Unable to update user.'
+      render :edit, alert: 'Unable to update user.'
     end
   end
 
@@ -36,9 +34,9 @@ class UsersController < ApplicationController
     authorize @user
 
     if @user.save
-      redirect_to users_path, notice: 'User updated.'
+      redirect_to admin_users_path, notice: 'User updated.'
     else
-      redirect_to users_path, alert: 'Unable to update user.'
+      render :new, alert: 'Unable to update user.'
     end
   end
 
@@ -46,12 +44,12 @@ class UsersController < ApplicationController
     user = User.find(params[:id])
     authorize user
     user.destroy
-    redirect_to users_path, notice: 'User deleted.'
+    redirect_to admin_users_path, notice: 'User deleted.'
   end
 
   private
 
   def secure_params
-    params.require(:user).permit(:first_name, :last_name)
+    params.require(:user).permit(:first_name, :last_name, :email, :role, :password, :password_confirmation)
   end
 end

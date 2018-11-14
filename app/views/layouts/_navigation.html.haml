@@ -7,7 +7,9 @@
     = dashboard_link_to 'Resources', resources_path, class: 'nav-link'
   %li.nav-item
     = dashboard_link_to 'Calendar', user_calendar_index_path(current_user.id), class: 'nav-link'
-
+  - if policy(:user).index?
+    %li.nav-item
+      = dashboard_link_to 'Users', admin_users_path, class: 'nav-link'
 %h6.sidebar-heading.d-flex.justify-content-between.align-items-center.px-3.mt-4.mb-1.text-light
   %span Reports
 %ul.nav.flex-column.mb-2

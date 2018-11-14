@@ -1,0 +1,25 @@
+- content_for(:title) do
+  Listing Users
+
+- content_for(:content_header_links) do
+  .justify-content-end.d-flex
+    .btn-group.mr-2
+      = link_to 'New User', new_admin_user_path, class: 'btn btn-sm btn-outline-secondary'
+    %button.btn.btn-sm.btn-outline-secondary.dropdown-toggle
+      %span{"data-feather" => "calendar"}
+      This week
+
+.table-responsive.table-hover
+  %table.table.table-striped
+    %thead
+      %tr
+        %th Email
+        %th Name
+        %th Role
+        %th
+        %th
+
+        %tbody
+          - @users.each do |user|
+            %tr
+              = render user

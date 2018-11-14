@@ -4,15 +4,34 @@ class User < ApplicationRecord
   enum role: %i[user vip admin]
   COREVIST_DOMAIN = 'corevist.com'
 
-  after_initialize :set_default_role, if: :new_record?
+  validates :email, :first_name, :last_name, :role, presence: true
+  validates :password, confirmation: { case_sensitive: true }
 
-  devise :database_authenticatable,:recoverable, :rememberable, :trackable,
-         :omniauthable, omniauth_providers: [:google_oauth2]
+  devise :database_authenticatable, :recoverable, :rememberable, :trackable, :omniauthable,
+         omniauth_providers: [:google_oauth2]
 
   dragonfly_accessor :photo
 
-  def set_default_role
-    self.role ||= :user
+  after_initialize :set_default_role, if: :new_record?
+
+  def admin?
+    role.to_sym == :admin
+  end
+
+  def user?
+    role.to_sym == :user
+  end
+
+  def vip?
+    role.to_sym == :vip
+  end
+
+  def name
+    "#{first_name} #{last_name}".camelize
+  end
+
+  def token_expired?
+    expires_at < Time.current.to_i
   end
 
   def self.from_omniauth(auth)
@@ -29,11 +48,9 @@ class User < ApplicationRecord
     end
   end
 
-  def name
-    "#{first_name} #{last_name}".camelize
-  end
+  private
 
-  def token_expired?
-    expires_at < Time.current.to_i
-  end
+    def set_default_role
+      self.role ||= :user
+    end
 end
