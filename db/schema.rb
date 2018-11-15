@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_09_155832) do
+ActiveRecord::Schema.define(version: 2018_11_13_130919) do
 
   create_table "adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "date"
@@ -61,6 +61,8 @@ ActiveRecord::Schema.define(version: 2018_11_09_155832) do
     t.string "creator_name"
     t.string "creator_email"
     t.string "type"
+    t.bigint "resource_id"
+    t.index ["resource_id"], name: "index_events_on_resource_id"
   end
 
   create_table "project_days", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

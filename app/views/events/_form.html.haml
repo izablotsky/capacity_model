@@ -13,6 +13,9 @@
             = form.label :end_date
             = form.datetime_field :end_date, class: 'form-control'
           .form-group
+            = form.label :resource
+            = form.select(:resource_id, Resource.all.collect { |resource| [resource.name, resource.id]}, { include_blank: true }, { class: 'form-control'})
+          .form-group
             = form.label :summary
             = form.text_field :summary, class: 'form-control'
 

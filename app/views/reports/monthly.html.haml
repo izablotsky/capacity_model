@@ -1,4 +1,5 @@
 %section.table-wrapper
+  = select_year params[:year].to_i || Date.today, { start_year: 2016, end_year: 2020 }, { class: 'form-control', id: 'year-picker' }
   %table
     %caption Monthly report
     - @result.data[:resources].each_with_index do |resource, index|
@@ -18,3 +19,7 @@
               = resource.name
             - else
               = @result.data[:monthes][month].prepare_data(resource)&.round(1)
+
+  = form_tag reports_path, method: :get , id: 'year-form' do
+    = hidden_field_tag :type, 'month'
+    = hidden_field_tag :year, Date.today.year, id: 'hidden-year-field'

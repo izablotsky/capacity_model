@@ -2,7 +2,7 @@
 
 class Reports::MonthlyService < BaseService
   def initialize(params = {})
-    @days = Calendar::Day.includes(:assigned_resources, :project_days)
+    @days = Calendar::Day.includes(:assigned_resources, :project_days).where(date: (Date.new(params[:year].to_i, 1, 1)..Date.new(params[:year].to_i, 12, 31)))
     @resources = Resource.includes(:assigned_resources, :projects)
     @data = {}
   end

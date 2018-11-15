@@ -3,6 +3,7 @@
 class Resource < ApplicationRecord
   has_many :assigned_resources
   has_many :projects, through: :assigned_resources
+  has_many :events
 
   alias assigned_projects assigned_resources
 
