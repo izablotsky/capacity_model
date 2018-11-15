@@ -8,8 +8,18 @@ module Calendar
     validates :date, uniqueness: true
 
     def prepare_data(resource)
+      return 0 if skip_date?(resource)
+      
       project_days.includes(:assigned_resource).where(resource_id: resource.id).sum do |pd|
         pd.assigned_resource&.consumed_per_day || 0
+      end
+    end
+
+    private
+
+    def skip_date?(resource)
+      resource.events.where(type: 'Vacation').any? do |event|
+        event.range.include?(date)
       end
     end
   end

@@ -14,9 +14,10 @@ module Reports
       @days.each do |day|
         day.project_days.each do |project_day|
           next if (assigned_resource = project_day.assigned_resource).blank?
-           @data[:data][assigned_resource.resource_type_id] ||= {}
-           date = project_day.date.strftime('%B-%y')
-           @data[:monthes] << date if @data[:monthes].exclude?(date)
+
+          @data[:data][assigned_resource.resource_type_id] ||= {}
+          date = project_day.date.strftime('%B-%y')
+          @data[:monthes] << date if @data[:monthes].exclude?(date)
           if @data[:data][assigned_resource.resource_type_id][date]
             @data[:data][assigned_resource.resource_type_id][date] += assigned_resource.consumed_per_day
           else
