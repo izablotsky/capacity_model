@@ -6,7 +6,7 @@ module Calendar
 
     def initialize(days, month, year)
       @name = month
-      @days = days.select { |day| day.date.strftime('%B') == month && day.date.year == year }
+      @days = days
     end
 
     def prepare_data(resource)
