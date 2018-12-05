@@ -1,19 +1,20 @@
 # frozen_string_literal: true
 
-class Reports::MonthlyService < BaseService
-  def initialize(params = {})
-    @year = params[:year]
-    @days = Calendar::Day.includes(:assigned_resources, :project_days).where(date: (Date.new(@year.to_i, 1, 1)..Date.new(@year.to_i, 12, 31)))
-    @resources = Resource.includes(:assigned_resources, :projects)
-    @data = {}
-  end
-
-  def call
-    @data[:resources] = @resources
-    @data[:monthes] = {}
-    Date::MONTHNAMES.compact.each do |month|
-      @data[:monthes][month] = Calendar::Month.new(@days, month, @year)
+module Reports
+  class MonthlyService < BaseService
+    def call
+      report = @assigned_resources.each_with_object({}) do |assigned_resource, memo|
+        memo[assigned_resource.name] ||= {}
+        assigned_resource.working_days.each do |date|
+          next if date.year.to_s != @params[:year]
+          if memo[assigned_resource.name][date.strftime('%B')].present?
+            memo[assigned_resource.name][date.strftime('%B')] += assigned_resource.consumed_per_day
+          else
+            memo[assigned_resource.name][date.strftime('%B')] = assigned_resource.consumed_per_day
+          end
+        end
+      end
+      MonthlyResult.new(report: report, type: :render, endpoint: 'reports/monthly')
     end
-    Reports::MonthlyResult.new(data: @data, type: :render, endpoint: 'reports/monthly')
   end
 end

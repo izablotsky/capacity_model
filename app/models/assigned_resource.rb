@@ -1,12 +1,29 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: assigned_resources
+#
+#  id               :bigint(8)        not null, primary key
+#  resource_id      :bigint(8)
+#  project_id       :bigint(8)
+#  resource_type_id :integer
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  involvement      :integer
+#  start_date       :datetime
+#  end_date         :datetime
+#  forecast_type_id :integer
+#
+
+
 class AssignedResource < ApplicationRecord
   scope :by_type, ->(id) { where(resource_type_id: id) }
 
   belongs_to :resource
   belongs_to :project
-  has_many :project_days, dependent: :destroy
-  has_many :calendar_days, through: :project_days, class_name: 'Calendar::Day'
+
+  delegate :name, :vacations, to: :resource
 
   def _start_date
     (start_date || project.start_date).to_date
@@ -17,7 +34,7 @@ class AssignedResource < ApplicationRecord
   end
 
   def working_days
-    _start_date.business_dates_until(_end_date + 1)
+    _start_date.business_dates_until(_end_date + 1) - vacations.map(&:range).flatten
   end
 
   def distribution?

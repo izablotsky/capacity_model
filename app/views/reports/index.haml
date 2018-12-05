@@ -1,18 +1,18 @@
 .container
-  .row
-    .d-flex.calendar.flex-row.position-relative.w-100.scroll-x
-      - @days.each_with_index do |day, index|
-        - if index == 0
-          .calendar-resources.d-flex.text-nowrap.position-sticky.flex-column
-            .calendar-cell.border-bottom
-              Resources
-            - @resources.all.each do |r|
-              .calendar-cell.border-bottom
-                = r.name
-
-        .px-3.border-right.text-nowrap
-          .calendar-cell.border-bottom
-            = day.date
-          - @resources.all.each do |r|
-            .calendar-cell.border-bottom
-              = day.prepare_data(r)
+  .card.text-center
+    .card-header
+      Daily Report
+    .card-body
+      %table.daily-report_table
+        %thead
+          %tr
+            -(Project.min_date.to_date..Date.today).each_with_index do |date, index|
+              %th= index.zero? ? 'Resource' : date
+        %tbody
+          - @report.each do |resource, hash|
+            %tr
+              - (Project.min_date.to_date..Date.today).each_with_index do |date, index|
+                - if index.zero?
+                  %td= resource
+                - else
+                  %td= hash[date]&.round(3) || 0

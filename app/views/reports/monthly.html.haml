@@ -2,23 +2,20 @@
   = select_year params[:year].to_i || Date.today, { start_year: 2016, end_year: 2020 }, { class: 'form-control', id: 'year-picker' }
   %table
     %caption Monthly report
-    - @result.data[:resources].each_with_index do |resource, index|
+    - @report.each_with_index do |(resource, report), index|
       - if index.zero?
         %thead
           %tr
             - Date::MONTHNAMES.each do |month|
               %td{ class: month.nil? ? 'first-col' : '' }
                 - if month.nil?
-                  = 'Resources'
+                  = 'Resources:'
                 - else
                   = month || 'Resources:'
       %tr
         - Date::MONTHNAMES.each do |month|
           %td{ class: month.nil? ? 'first-col' : '' }
-            - if month.nil?
-              = resource.name
-            - else
-              = @result.data[:monthes][month].prepare_data(resource)&.round(1)
+            = month.nil? ? resource : report[month]&.round(3) || 0
 
   = form_tag reports_path, method: :get , id: 'year-form' do
     = hidden_field_tag :type, 'month'

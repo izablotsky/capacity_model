@@ -1,5 +1,16 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: estimations
+#
+#  id               :bigint(8)        not null, primary key
+#  project_id       :bigint(8)
+#  resource_type_id :integer
+#  hours            :integer
+#
+
+
 class Estimation < ApplicationRecord
   scope :by_type, ->(type) { where(resource_type_id: type) }
   scope :total,   ->(type) { by_type(type).sum(:hours) }

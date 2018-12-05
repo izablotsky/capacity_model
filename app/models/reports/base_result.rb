@@ -2,10 +2,10 @@
 
 module Reports
   class BaseResult
-    attr_accessor :data, :type, :endpoint
+    attr_accessor :report, :type, :endpoint
 
-    def initialize(data:, type:, endpoint:)
-      @data = data
+    def initialize(report:, type:, endpoint:)
+      @report = report
       @type = type
       @endpoint = endpoint
     end
