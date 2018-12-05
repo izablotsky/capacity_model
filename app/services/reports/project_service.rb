@@ -1,27 +1,24 @@
 module Reports
   class ProjectService
     def initialize(params = {})
-      @project = Project.find(params[:id])
-      @resources = @project.resources
-      @project_days = @project.project_days
-      @data = { data: {}, resources: [], project_name: @project.name }
+      @project = Project.find(params[:project_id])
+      @assigned_resources = @project.assigned_resources
+      @params = params
     end
 
     def call
-      @resources.each do |resource|
-        @data[:resources] << resource
-        @data[:data][resource.name] = {}
-        @project_days.select { |project_day| project_day.resource == resource }.each do |project_day|
-          next if (assigned_resource = project_day.assigned_resource).blank?
-
-          if @data[:data][resource.name][project_day.date]
-            @data[:data][resource.name][project_day.date] += assigned_resource.consumed_per_day
+      report = @assigned_resources.each_with_object({}) do |assigned_resource, memo|
+        memo[assigned_resource.name] ||= {}
+        assigned_resource.working_days.each do |date|
+          next if date.year.to_s != @params[:year]
+          if memo[assigned_resource.name][date.strftime('%B')].present?
+            memo[assigned_resource.name][date.strftime('%B')] += assigned_resource.consumed_per_day
           else
-            @data[:data][resource.name][project_day.date] = assigned_resource.consumed_per_day
+            memo[assigned_resource.name][date.strftime('%B')] = assigned_resource.consumed_per_day
           end
         end
       end
-      Reports::BaseResult.new(data: @data, type: :render, endpoint: 'projects/show')
+      BaseResult.new(report: report, type: :render, endpoint: 'reports/project')
     end
   end
 end

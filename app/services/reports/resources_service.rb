@@ -1,31 +1,23 @@
 # frozen_string_literal: true
 
 module Reports
-  class ResourcesService
-    def initialize(_params = {})
-      @projects = Project.all
-      @days = Calendar::Day.includes(:assigned_resources, :project_days)
-      @data = {}
-    end
-
+  class ResourcesService < BaseService
     def call
-      @data[:monthes] = []
-      @data[:data] = {}
-      @days.each do |day|
-        day.project_days.each do |project_day|
-          next if (assigned_resource = project_day.assigned_resource).blank?
-
-          @data[:data][assigned_resource.resource_type_id] ||= {}
-          date = project_day.date.strftime('%B-%y')
-          @data[:monthes] << date if @data[:monthes].exclude?(date)
-          if @data[:data][assigned_resource.resource_type_id][date]
-            @data[:data][assigned_resource.resource_type_id][date] += assigned_resource.consumed_per_day
-          else
-            @data[:data][assigned_resource.resource_type_id][date] = assigned_resource.consumed_per_day
+      report = @assigned_resources.group_by(&:resource_type_id).each_with_object({}) do |(type, assigned_resources), memo|
+        memo[type] ||= {}
+        assigned_resources.each do |assigned_resource|
+          assigned_resource.working_days.each do |date|
+            next if date.year.to_s != @params[:year]
+            memo[type] ||= {}
+            if memo[type][date.strftime('%B')].present?
+              memo[type][date.strftime('%B')]+= assigned_resource.consumed_per_day
+            else
+              memo[type][date.strftime('%B')] = assigned_resource.consumed_per_day
+            end
           end
         end
       end
-      Reports::BaseResult.new(data: @data, type: :render, endpoint: 'reports/resources')
+      BaseResult.new(report: report, type: :render, endpoint: 'reports/resources')
     end
   end
 end

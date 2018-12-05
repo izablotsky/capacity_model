@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_13_130919) do
+ActiveRecord::Schema.define(version: 2018_12_04_121217) do
 
-  create_table "adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.datetime "date"
     t.bigint "project_id"
     t.datetime "created_at", null: false
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 2018_11_13_130919) do
     t.index ["project_id"], name: "index_adjustments_on_project_id"
   end
 
-  create_table "assigned_resources", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "assigned_resources", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.bigint "resource_id"
     t.bigint "project_id"
     t.integer "resource_type_id"
@@ -34,18 +34,14 @@ ActiveRecord::Schema.define(version: 2018_11_13_130919) do
     t.index ["resource_id"], name: "index_assigned_resources_on_resource_id"
   end
 
-  create_table "calendar_days", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.date "date", null: false
-  end
-
-  create_table "clients", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "clients", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "abbreviation"
   end
 
-  create_table "estimations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "estimations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.bigint "project_id"
     t.integer "resource_type_id"
     t.integer "hours"
@@ -65,18 +61,7 @@ ActiveRecord::Schema.define(version: 2018_11_13_130919) do
     t.index ["resource_id"], name: "index_events_on_resource_id"
   end
 
-  create_table "project_days", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "calendar_day_id"
-    t.bigint "assigned_resource_id"
-    t.integer "resource_id"
-    t.bigint "project_id"
-    t.index ["assigned_resource_id"], name: "index_project_days_on_assigned_resource_id"
-    t.index ["calendar_day_id"], name: "index_project_days_on_calendar_day_id"
-    t.index ["project_id"], name: "index_project_days_on_project_id"
-    t.index ["resource_id"], name: "index_project_days_on_resource_id"
-  end
-
-  create_table "projects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "projects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "uid", limit: 5
     t.string "name"
     t.integer "price"
@@ -91,7 +76,7 @@ ActiveRecord::Schema.define(version: 2018_11_13_130919) do
     t.index ["uid"], name: "index_projects_on_uid"
   end
 
-  create_table "resources", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "resources", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
     t.string "email"
@@ -101,7 +86,7 @@ ActiveRecord::Schema.define(version: 2018_11_13_130919) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -129,5 +114,4 @@ ActiveRecord::Schema.define(version: 2018_11_13_130919) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "project_days", "projects"
 end

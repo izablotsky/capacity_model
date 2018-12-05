@@ -1,16 +1,31 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: projects
+#
+#  id         :bigint(8)        not null, primary key
+#  uid        :string(5)
+#  name       :string(255)
+#  price      :integer
+#  currency   :integer
+#  status     :string(255)
+#  start_date :datetime
+#  end_date   :datetime
+#  client_id  :bigint(8)
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#
+
+
 class Project < ApplicationRecord
   extend NestedAttributes
-
-  attr_reader :resource_types
 
   belongs_to :client
   has_many :adjustments, dependent: :destroy
   has_many :estimations, dependent: :destroy
   has_many :assigned_resources, dependent: :destroy
   has_many :resources, through: :assigned_resources
-  has_many :project_days
 
   nested_attributes_for :assigned_resources, :estimations
 
@@ -22,6 +37,14 @@ class Project < ApplicationRecord
       on_hold: 4,
       completed: 3
   }
+
+  def self.min_date
+    Project.minimum(:start_date)
+  end
+
+  def self.max_date
+    Project.maximum(:end_date)
+  end
 
   def status_name
     Settings.project.status.to_h.key(status.to_i)
