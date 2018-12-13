@@ -19,5 +19,6 @@
     = link_to 'Monthly Report', reports_path(type: :month, year: Date.today.year), class: 'nav-link'
   %li.nav-item
     = link_to 'By resource type', reports_path(type: :resource, year: Date.today.year), class: 'nav-link'
-  %li.nav-item
-    = link_to 'By project', reports_path(type: :project, year: Date.today.year, project_id: Project.first.id), class: 'nav-link'
+  - if Project.any?
+    %li.nav-item
+      = link_to 'By project', reports_path(type: :project, year: Date.today.year, project_id: Project.first.id), class: 'nav-link'
