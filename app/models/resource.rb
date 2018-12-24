@@ -17,7 +17,8 @@
 
 class Resource < ApplicationRecord
   has_many :assigned_resources
-  has_many :projects, through: :assigned_resources
+  has_many :adjustments, through: :assigned_resources
+  has_many :projects, through: :adjustments
   has_many :events
   has_many :vacations
 
