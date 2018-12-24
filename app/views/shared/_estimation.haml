@@ -1,0 +1,15 @@
+.flex-input-item
+  .form-group
+    = label_tag :resource_type_id
+    = content_tag(:p, resource_type_name(object.resource_type_id), class: 'form-control')
+.flex-input-item
+  .form-group
+    = label_tag :hours
+    = content_tag(:p, object.hours, class: 'form-control')
+.flex-input-item
+  .form-group
+    = label_tag :actions
+    .row
+      .btn-group
+        = link_to 'Edit', '#', onclick: "editEstimation(event, #{object.id});", class: 'form-control btn-info'
+        = link_to 'Delete', estimation_url(id: object.id, project_id: project_id), method: :delete, data: 'Are you sure?', class: 'btn btn-danger'

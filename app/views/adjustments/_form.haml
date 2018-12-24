@@ -13,9 +13,29 @@
         .flex-row.d-inline-flex
           .flex-input-item.flex-fill
             .form-group
-              = f.label :date
-              = f.date_field :date, class: 'form-control'
+              = f.label :start_date
+              = f.date_field :start_date, class: 'form-control'
+          .flex-input-item.flex-fill
+            .form-group
+              = f.label :end_date
+              = f.date_field :end_date, class: 'form-control'
       = f.hidden_field :project_id, value: params[:project_id]
+
+  .d-flex.flex-column
+    .flex-fill.pb-2.mb-2.w-100.text-center.border-bottom.shadow-sm.resources-title.pt-2
+      %span.font-weight-bold.text-uppercase
+        Estimations:
+    .project-estimations
+
+  .d-flex.flex-column
+    .flex-fill.pb-2.mb-2.w-100.text-center.border-bottom.shadow-sm.resources-title.pt-2
+      %span.font-weight-bold.text-uppercase
+        Resources:
+
   .d-flex.flex-row.form-actions.w-100
     = link_to 'Back', resources_path, class: 'btn btn-dark'
     = f.submit 'Save', class: 'btn btn-success'
+    = link_to_add_association 'Add estimation', f, :estimations, 'data-association-insertion-method': :after,
+      class: 'btn btn-info', 'data-association-insertion-node': '.project-estimations', partial: 'shared/estimation_fields'
+    = link_to_add_association 'Add resource', f, :assigned_resources, 'data-association-insertion-method': :after,
+      class: 'btn btn-info', partial: 'shared/assigned_resource_fields'

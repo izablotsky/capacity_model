@@ -10,8 +10,8 @@ services:
     depends_on:
       - mysql5
     volumes:
-      - ~/RubymineProjects/copacity-model:/copacity-model
-      - ~/RubymineProjects:/projects
+      - ~/RubymineProjects/capacity-model:/capacity-model
+      - ~/projects:/projects
 
   mysql5:
     image: 'mysql:5.7'

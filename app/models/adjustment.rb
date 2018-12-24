@@ -14,6 +14,11 @@
 
 class Adjustment < ApplicationRecord
   belongs_to :project
+  has_many :estimations, dependent: :destroy
+  has_many :assigned_resources, dependent: :destroy
+  has_many :resources, through: :assigned_resources
+
+  accepts_nested_attributes_for :assigned_resources, :estimations, allow_destroy: true
 
   def date_pretty
     date&.strftime(Settings.date_format.first)

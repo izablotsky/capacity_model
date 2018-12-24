@@ -18,19 +18,20 @@
 
 
 class AssignedResource < ApplicationRecord
-  scope :by_type, ->(id) { where(resource_type_id: id) }
+  scope :by_type, ->(id) { where(resource_type_id: id).distinct }
 
   belongs_to :resource
-  belongs_to :project
+  belongs_to :adjustment, optional: true
 
   delegate :name, :vacations, to: :resource
+  delegate :project, to: :adjustment, allow_nil: true
 
   def _start_date
-    (start_date || project.start_date).to_date
+    (start_date || project&.start_date).to_date
   end
 
   def _end_date
-    (end_date || project.end_date).to_date
+    (end_date || project&.end_date).to_date
   end
 
   def working_days
@@ -50,7 +51,7 @@ class AssignedResource < ApplicationRecord
   end
 
   def allocated_per_day
-    work_day_time * (involvement.to_f / 100)
+    work_day_time * (allocation_involvement.to_f / 100)
   end
 
   def work_day_time
@@ -59,10 +60,18 @@ class AssignedResource < ApplicationRecord
 
   def consumed_per_day
     if distribution?
-      work_day_time.round(1)
+      distributed_per_day
     else
       allocated_per_day
     end
+  end
+
+  def _distribution_involvement
+    @_distribution_involvement ||= if project.assigned_resources.by_type(resource_type_id).to_a.uniq(&:name).size == 1
+                                     1
+                                   else
+                                     distribution_involvement.to_f / 100
+                                   end
   end
 
   def hours_consumed
@@ -72,5 +81,15 @@ class AssignedResource < ApplicationRecord
 
     assigned_time = allocated_per_day * working_days.size.to_f
     (assigned_time > total_estimation ? total_estimation : assigned_time).round(1)
+  end
+
+  private
+
+  def distributed_per_day
+    distributed_estimation / working_days.size.to_f
+  end
+
+  def distributed_estimation
+    adjustment.estimations.total(resource_type_id).to_f * _distribution_involvement
   end
 end

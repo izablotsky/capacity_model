@@ -1,0 +1,38 @@
+= hidden_field_tag :project_id, value: project_id
+.flex-input-item
+  .form-group
+    = label_tag :resource_id
+    = content_tag(:p, object.name, class: 'form-control')
+.flex-input-item
+  .form-group
+    = label_tag :resource_type_id
+    = content_tag(:p, resource_type_name(object.resource_type_id), class: 'form-control')
+.flex-input-item.distribution_involvement{ class: "#{distribution?(object) ? '' : 'd-none'}"}
+  .form-group
+    // = involvement_field
+    = label_tag :distribution_involvement
+    = content_tag(:p, object.distribution_involvement, class: 'form-control')
+.flex-input-item.allocation_involvement{ class: "#{distribution?(object) ? 'd-none' : ''}"}
+  .form-group
+    = label_tag :allocation_involvement
+    = content_tag(:p, object.allocation_involvement, class: 'form-control')
+.flex-input-item
+  .form-group
+    = label_tag :forecast_type_id
+    = content_tag(:p, forecast_type(object.forecast_type_id), class: 'form-control')
+.flex-input-item
+  .form-group
+    = label_tag :start_date
+    = content_tag(:p, object.start_date&.to_date, class: 'form-control')
+.flex-input-item
+  .form-group
+    = label_tag :end_date
+    = content_tag(:p, object.end_date&.to_date, class: 'form-control')
+.flex-input-item
+  .form-group
+    = label_tag :actions
+    .row
+      .btn-group
+        = link_to 'Edit', '#', onclick: "editAssignedResource(event, #{object.id});", class: 'btn btn-info'
+        = link_to 'Delete', assigned_resource_url(id: object.id, project_id: project_id), method: :delete, data: 'Are you sure?', class: 'btn btn-danger'
+

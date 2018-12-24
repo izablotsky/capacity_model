@@ -10,6 +10,8 @@ Rails.application.routes.draw do
   resources :calendar_days, only: :index
   resources :reports, only: :index
   resources :events, only: %i[index new create]
+  resources :assigned_resources, only: %i[edit update destroy]
+  resources :estimations, only: %i[edit update destroy]
 
   resources :users, only: [], shallow: true do
     resources :calendar, only: :index, controller: 'users/calendar'

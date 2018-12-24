@@ -1,9 +1,17 @@
 # frozen_string_literal: true
 
 class EstimationForm < BaseForm
-  attr_accessor :id, :project_id, :hours, :resource_type_id, :_destroy
+  attr_accessor :id, :adjustment_id, :hours, :resource_type_id
 
-  validates :hours, :resource_type_id, :project_id, presence: true
+  validates :hours, :resource_type_id, :adjustment_id, presence: true
+
+  delegate :project, to: :estimation
+
+  def update
+    return false if invalid?
+
+    estimation.update(estimation_params)
+  end
 
   private
 
@@ -12,10 +20,14 @@ class EstimationForm < BaseForm
     estimation.save!
   end
 
+  def estimation
+    @estimation ||= Estimation.find(id)
+  end
+
   def estimation_params
     {
       hours: hours,
-      project_id: project_id,
+      adjustment_id: adjustment_id,
       resource_type_id: resource_type_id
     }
   end

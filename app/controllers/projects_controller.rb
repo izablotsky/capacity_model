@@ -4,7 +4,7 @@ class ProjectsController < ApplicationController
   before_action :set_project, only: %i[show edit update destroy]
 
   def index
-    projects = Project.includes(:client, :resources, :estimations, :adjustments)
+    projects = Project.includes(:client, :adjustments, :estimations, resources: [:vacations])
     projects = params[:client_id].present? ? projects.where(client_id: params[:client_id]) : projects
     @projects = params[:status].present? ? projects.where(status: Project::STATUS[params[:status].to_sym]) : projects
   end
@@ -18,11 +18,9 @@ class ProjectsController < ApplicationController
   end
 
   def edit
-    attrs = @project.attributes
-                    .merge(@project.assigned_resources_attributes)
-                    .merge(@project.estimations_attributes)
-
-    @project = ProjectForm.new(attrs)
+    @assigned_resources = @project.assigned_resources
+    @estimations = @project.estimations
+    @project = ProjectForm.new(@project.attributes)
   end
 
   def create

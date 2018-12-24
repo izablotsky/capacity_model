@@ -19,4 +19,12 @@ module ApplicationHelper
   def currency_name(currency)
     Settings.currencies.to_h.key(currency)
   end
+
+  def distribution?(assigned_resource)
+    assigned_resource.forecast_type_id.zero?
+  end
+
+  def forecast_type(id)
+    Settings.assigned_resource.forecast.types.to_h.key(id)
+  end
 end

@@ -1,27 +1,32 @@
 # frozen_string_literal: true
 
 class ProjectForm < BaseForm
-  attr_accessor :id, :uid, :name, :price, :currency, :status, :client_id, :start_date, :end_date,
-                :assigned_resources, :estimations
+  attr_accessor :id, :uid, :name, :price, :currency, :status, :client_id,
+                :start_date, :end_date, :adjustments, :estimations, :assigned_resources
 
   validates :uid, :name, :price, :currency, :status, :client_id, :start_date, :end_date, presence: true
-  validate :assign_resource_dates
+  # validate :assign_resource_dates
 
   has_many :assigned_resources, class_name: AssignedResourceForm.to_s
   has_many :estimations, class_name: EstimationForm.to_s
 
   def initialize(params = {})
+    @adjustments = []
     @assigned_resources = []
     @estimations = []
     super
   end
 
-  def build_assigned_resources
-    AssignedResourceForm.new
+  def build_adjustment
+    Adjustment.new
   end
 
-  def build_estimation
+  def build_estimations
     EstimationForm.new
+  end
+
+  def build_assigned_resource
+    AssignedResourceForm.new
   end
 
   private
@@ -31,14 +36,17 @@ class ProjectForm < BaseForm
       project = Project.new(project_params)
       project.save!
 
+      adjustment = project.adjustments.build(start_date: project_params[:start_date], end_date: project_params[:end_date], default: true)
+      adjustment.save!
+
       assigned_resources.each do |ar|
-        ar.project_id = project.id
+        ar.adjustment_id = adjustment.id
 
         raise ActiveRecord::Rollback unless ar.save
       end
 
       estimations.each do |estimation|
-        estimation.project_id = project.id
+        estimation.adjustment_id = adjustment.id
         raise ActiveRecord::Rollback unless estimation.save
       end
     end
@@ -51,30 +59,7 @@ class ProjectForm < BaseForm
   end
 
   def update!
-    ActiveRecord::Base.connection.transaction do
-      project = Project.find(id)
-      project.update!(project_params)
-
-      project.assigned_resources.delete_all
-
-      assigned_resources.each do |ar|
-        ar.project_id = project.id
-        raise ActiveRecord::Rollback unless ar.save
-      end
-
-      project.estimations.delete_all
-
-      estimations.each do |estimation|
-        estimation.project_id = project.id
-        raise ActiveRecord::Rollback unless estimation.save
-      end
-    end
-
-    true
-  rescue ActiveRecord::Rollback => e
-    errors.add(:base, e.message)
-
-    false
+    Project.find(id).update(project_params)
   end
 
   def project_params

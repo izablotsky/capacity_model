@@ -1,0 +1,15 @@
+= form_for @estimation_form, url: estimation_url(@estimation_form.id), method: :put do |f|
+  = f.hidden_field :id, value: f.object.id
+  = f.hidden_field :adjustment_id, value: f.object.adjustment_id
+  = f.hidden_field :project_id, value: f.object.project.id
+  .flex-input-item
+    .form-group
+      = f.label :resource_type_id
+      = f.select :resource_type_id, options_for_select(Settings.resource_types.to_a, f.object.resource_type_id), {}, class: 'form-control'
+  .flex-input-item
+    .form-group
+      = f.label :hours
+      = f.text_field :hours, class: 'form-control', size: 12
+  .flex-input-item
+    .form-group
+      %span.form-control.btn.btn-success{ onclick: "updateEstimation(event, #{f.object.id});" } Save

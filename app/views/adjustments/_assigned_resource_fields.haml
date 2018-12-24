@@ -1,9 +1,9 @@
-.d-inline-flex.remove-node.mb-3.pb-3.border-bottom.shadow-sm.w-100
-  - if f.object.errors.any?
+- if f.object.errors.any?
+  .d-inline-flex.remove-node.mb-3.pb-3.border-bottom.shadow-sm.w-100
     .d-flex.flex-column.w-100
       - f.object.errors.full_messages.each do |message|
         .alert.alert-danger.w-100= message
-.d-inline-flex.remove-node.mb-3.pb-3.border-bottom.shadow-sm.w-100
+.d-inline-flex.remove-node.mb-3.pb-3.border-bottom.shadow-sm.w-100.assigned_resource-row
   .flex-input-item
     - if params[:id]
       = f.hidden_field :project_id, value: params[:id]
@@ -14,14 +14,18 @@
     .form-group
       = f.label :resource_type_id
       = f.select :resource_type_id, options_for_select(Settings.resource_types.to_a, f.object.resource_type_id), {}, class: 'form-control'
-  .flex-input-item
+  .flex-input-item.distribution_involvement
     .form-group
-      = f.label :involvement
-      = f.text_field :involvement, class: 'form-control', size: 12
+      = f.label :distribution_involvement
+      = f.text_field :distribution_involvement, class: 'form-control', size: 12
+  .flex-input-item.d-none.allocation_involvement
+    .form-group
+      = f.label :allocation_involvement
+      = f.text_field :allocation_involvement, class: 'form-control', size: 12
   .flex-input-item
     .form-group
       = f.label :forecast_type_id
-      = f.select :forecast_type_id, options_for_select(Settings.assigned_resource.forecast.types.to_a, f.object.forecast_type_id), {}, class: 'form-control'
+      = f.select :forecast_type_id, options_for_select(Settings.assigned_resource.forecast.types.to_a, f.object.forecast_type_id), {}, class: 'form-control forecast_type', onchange: 'changeInvolvementField(event);'
   .flex-input-item
     .form-group
       = f.label :start_date

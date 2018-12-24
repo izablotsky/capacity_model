@@ -39,6 +39,7 @@ gem 'dragonfly', '~> 1.1.5'
 gem 'google-api-client'
 gem 'fullcalendar-rails'
 gem 'momentjs-rails'
+gem 'date_validator'
 
 
 # fix vulnerabilities

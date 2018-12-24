@@ -1,0 +1,36 @@
+= form_for @assigned_resource_form, url: assigned_resource_url(@assigned_resource_form.id), method: :put do |form|
+  = form.hidden_field :id, value: form.object.id
+  = form.hidden_field :adjustment_id, value: form.object.adjustment_id
+  = form.hidden_field :project_id, value: form.object.project.id
+  .flex-input-item
+    .form-group
+      = form.label :resource_id
+      = form.collection_select :resource_id, Resource.all, :id, :name, { prompt: true }, { class: 'form-control' }
+  .flex-input-item
+    .form-group
+      = form.label :resource_type_id
+      = form.select :resource_type_id, options_for_select(Settings.resource_types.to_a, form.object.resource_type_id), {}, class: 'form-control'
+  .flex-input-item.distribution_involvement{ class: "#{distribution?(form.object) ? '' : 'd-none'}" }
+    .form-group
+      = form.label :distribution_involvement
+      = form.text_field :distribution_involvement, class: 'form-control', size: 12
+  .flex-input-item.allocation_involvement{ class: "#{distribution?(form.object) ? 'd-none' : ''}" }
+    .form-group
+      = form.label :allocation_involvement
+      = form.text_field :allocation_involvement, class: 'form-control', size: 12
+  .flex-input-item
+    .form-group
+      = form.label :forecast_type_id
+      = form.select :forecast_type_id, options_for_select(Settings.assigned_resource.forecast.types.to_a, form.object.forecast_type_id), {}, class: 'form-control forecast_type', onchange: 'changeInvolvementField(event);'
+  .flex-input-item
+    .form-group
+      = form.label :start_date
+      = form.date_field :start_date, class: 'form-control'
+  .flex-input-item
+    .form-group
+      = form.label :end_date
+      = form.date_field :end_date, class: 'form-control'
+  .flex-input-item
+    .form-group
+      %span.form-control.btn.btn-success{ onclick: "updateAssignedResource(event, #{form.object.id});" } Save
+

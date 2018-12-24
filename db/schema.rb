@@ -10,27 +10,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_04_121217) do
+ActiveRecord::Schema.define(version: 2018_12_19_140115) do
 
   create_table "adjustments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.datetime "date"
+    t.datetime "start_date"
     t.bigint "project_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "default", default: false
+    t.datetime "end_date"
     t.index ["project_id"], name: "index_adjustments_on_project_id"
   end
 
   create_table "assigned_resources", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.bigint "resource_id"
-    t.bigint "project_id"
     t.integer "resource_type_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "involvement"
+    t.integer "distribution_involvement"
     t.datetime "start_date"
     t.datetime "end_date"
     t.integer "forecast_type_id"
-    t.index ["project_id"], name: "index_assigned_resources_on_project_id"
+    t.bigint "adjustment_id"
+    t.integer "allocation_involvement", default: 0
+    t.index ["adjustment_id"], name: "index_assigned_resources_on_adjustment_id"
     t.index ["resource_id"], name: "index_assigned_resources_on_resource_id"
   end
 
@@ -42,10 +45,10 @@ ActiveRecord::Schema.define(version: 2018_12_04_121217) do
   end
 
   create_table "estimations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.bigint "project_id"
     t.integer "resource_type_id"
     t.integer "hours"
-    t.index ["project_id"], name: "index_estimations_on_project_id"
+    t.bigint "adjustment_id"
+    t.index ["adjustment_id"], name: "index_estimations_on_adjustment_id"
   end
 
   create_table "events", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|

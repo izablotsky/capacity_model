@@ -5,13 +5,13 @@
       - if index.zero?
         %thead
           %tr
-            - (Project.min_date.to_date..Date.today).each_with_index do |day, index|
+            - (Project.min_date.to_date..Project.max_date).each_with_index do |day, index|
               - if index.zero?
                 %th.first-col
                   = 'Resources:'
               %th= day
       %tr
-        - (Project.min_date.to_date..Date.today).each_with_index do |day, index|
+        - (Project.min_date.to_date..Project.max_date).each_with_index do |day, index|
           - if index.zero?
             %td.first-col
               = resource_name

@@ -84,16 +84,16 @@
           .w-50.text-underscore
             = project.code_complete_date.pretty
         .d-flex.project-corrections.flex-column
-          %span.mb-1 adjustments:
+          %span.mb-1 Adjustments:
 
-          - project.adjustments.each do |adjustment|
+          - project.adjustments.where(default: false).each do |adjustment|
             .d-flex.flex-row.border-bottom.mb-1
               .d-flex.w-50.text-left.mr-2.flex-column
                 %span.from.text-uppercase.text-underline= 'FROM: '
-                %span= adjustment.date.pretty
+                %span= adjustment.start_date.pretty
               .d-flex.w-50.text-left.flex-column
                 %span.to.text-uppercase.text-underline= 'TO: '
-                %span= adjustment.date.pretty
+                %span= adjustment.end_date.pretty
               %span.pt-3
                 = link_to project_adjustment_path(project, adjustment), method: :delete, data: { confirm: 'Are you sure?' } do
                   %span.oi.oi-trash
