@@ -1,4 +1,54 @@
 - content_for(:title) do
   New adjustment
+.w-100
+  .d-flex
+    .flex-input-item
+      .form-group
+        = label_tag :uid
+        = text_field_tag :uid, @project.uid, readonly: true, class: 'form-control', size: 7
+    .flex-input-item.flex-fill
+      .form-group
+        = label_tag :name
+        = text_field_tag :name, @project.name, class: 'form-control', readonly: true
+    .flex-input-item
+      .form-group.w-33
+        = label_tag :client_id
+        = text_field_tag :client_name, @project.client, class: 'form-control', readonly: true
+    .flex-input-item
+      .form-group
+        = label_tag :status
+        = text_field_tag :status, @project.status, class: 'form-control', readonly: true
 
-= render 'form'
+  .d-flex.border-bottom
+    .flex-input-item
+      .form-group
+        = label_tag :price
+        = text_field_tag :price, @project.price, class: 'form-control', readonly: true
+    .flex-input-item
+      .form-group
+        = label_tag :currency
+        = text_field_tag :currency, @project.currency, class: 'form-control', readonly: true
+    .flex-input-item
+      .form-group
+        = label_tag :start_date
+        = text_field_tag :start_date, @project.start_date.to_date, class: 'form-control', readonly: true
+    .flex-input-item
+      .form-group
+        = label_tag :end_date
+        = text_field_tag :end_date, @project.end_date.to_date, class: 'form-control', readonly: true
+
+  -# .d-flex.flex-column
+  -#   .flex-fill.pb-2.mb-2.w-100.text-center.border-bottom.shadow-sm.resources-title.pt-2
+  -#     %span.font-weight-bold.text-uppercase
+  -#       Estimations:
+  -#   .estimations
+  -#     = render partial: 'shared/wrapper', collection: @project.estimations, as: :object, locals: { project_id: @project.id, partial_name: 'shared/estimation' }  
+
+  -# .d-flex.flex-column
+  -#   .flex-fill.pb-2.mb-2.w-100.text-center.border-bottom.shadow-sm.resources-title.pt-2
+  -#     %span.font-weight-bold.text-uppercase
+  -#       Resources:
+  -#   .resources
+  -#     = render partial: 'shared/wrapper', collection: @project.assigned_resources, as: :object, locals: { project_id: @project.id, partial_name: 'shared/assigned_resource' }
+
+  = render 'form'

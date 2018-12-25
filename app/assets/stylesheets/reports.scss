@@ -22,10 +22,6 @@
       td {
         font-size: 18px;
 
-        &:first-child {
-          background: white;
-        }
-
         &:nth-child(2){
           padding-left: 160px;
         }
@@ -39,24 +35,16 @@
 
         &:nth-child(odd) td:first-child {
           padding-left: 15px;
-          background: white;
         }
 
         &:nth-child(even) td:first-child {
           padding-left: 15px;
-          background: #ff6c6e;
         }
 
         &:not(:nth-child(1)) {
           min-width: 96px;
         }
       }
-    }
-
-    tr:nth-child(even) {
-      background: #ff5f6d; /* fallback for old browsers */
-      background: linear-gradient(to right, rgba(#ff5f6d, .5), rgba(#ffc371, .5)); /* Chrome 10-25, Safari 5.1-6 */
-      background: linear-gradient(to right, #ff5f6d, #ffc371); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     }
 
     caption {

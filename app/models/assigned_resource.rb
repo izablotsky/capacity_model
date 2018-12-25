@@ -67,10 +67,10 @@ class AssignedResource < ApplicationRecord
   end
 
   def _distribution_involvement
-    @_distribution_involvement ||= if project.assigned_resources.by_type(resource_type_id).to_a.uniq(&:name).size == 1
+    @_distribution_involvement ||= if uniq_assigned_resources.size == 1
                                      1
                                    else
-                                     distribution_involvement.to_f / 100
+                                     distribution_coeff
                                    end
   end
 
@@ -84,6 +84,16 @@ class AssignedResource < ApplicationRecord
   end
 
   private
+
+  def uniq_assigned_resources
+    @uniq_assigned_resources ||= adjustment.assigned_resources.by_type(resource_type_id)
+  end
+
+  def distribution_coeff
+    return distribution_involvement.to_f / 100 if distribution_involvement.present?
+
+    1.0 / uniq_assigned_resources.size
+  end
 
   def distributed_per_day
     distributed_estimation / working_days.size.to_f

@@ -5,6 +5,7 @@ class AdjustmentsController < ApplicationController
 
   def new
     @adjustment = AdjustmentForm.new
+    @project = Project.find(params[:project_id]) if params[:project_id].present?
   end
 
   def create

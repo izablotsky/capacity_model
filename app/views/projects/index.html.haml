@@ -16,7 +16,7 @@
 .flex-column.w-100.dark-gray
   - @projects.each_with_index do |project, index|
     .d-flex.m-2.p-4.border.shadow-sm.bg-light.position-relative.project
-      .w-40.flex-row.border-right.pr-3.position-relative
+      .w-55.flex-row.border-right.pr-3.position-relative
         .d-flex.project-title.mb-3.flex-column
           %h5
             \#
@@ -29,47 +29,45 @@
             = project.price
             = currency_name(project.currency)
 
-      .w-35.border-right.px-3
+      .w-20.border-right.px-3
         .project-assigned-resources
-          .project-assigned-resource.d-flex.mb-2.pb-2.border-bottom.text-center
-            .w-35
+          .d-flex.mb-2.pb-2.border-bottom.text-center
+            .w-100
               %span.oi.oi-people{ title: 'resource name' }
-            .w-20
-              %span.oi.oi-command{ title: 'resource type' }
-            .w-15
-              %span.oi.oi-wrench{ title: 'assigned hours' }
-            .w-15
-              %span.oi.oi-pin{ title: 'total estimated hours for project' }
-            .w-15
-              %span.oi.oi-warning{ title: 'unallocated hours for project' }
-          - project.resource_types.each do |rt|
-            - if project.assigned_resources.by_type(rt).any?
-              - project.assigned_resources.by_type(rt).each do |ar|
-                .project-assigned-resource.d-flex.mb-2.pb-2.border-bottom.text-center
-                  .w-35
-                    = ar.resource.name
-                  .w-20
-                    = resource_type_name(rt)
-                  .w-15
-                    %span= ar.hours_consumed
-                  .w-15
-                    %span= project.estimated_hours_for(ar.resource_type_id)
-                  .w-15
-                    %span= project.unallocated_hours_for(ar.resource_type_id)
-            - else
+            -# .w-20
+            -#   %span.oi.oi-command{ title: 'resource type' }
+            -# .w-15
+            -#   %span.oi.oi-wrench{ title: 'assigned hours' }
+            -# .w-15
+            -#   %span.oi.oi-pin{ title: 'total estimated hours for project' }
+            -# .w-15
+            -#   %span.oi.oi-warning{ title: 'unallocated hours for project' }
+          - if project.resources.any?
+            - project.resources.distinct.each do |resource|
               .project-assigned-resource.d-flex.mb-2.pb-2.border-bottom.text-center
-                .w-35 -
-                .w-20
-                  = resource_type_name(rt)
-                .w-15
-                  %span -
-                .w-15
-                  %span= project.estimated_hours_for(rt)
-                .w-15
-                  %span= project.unallocated_hours_for(rt)
+                .w-100
+                  = resource.name
+                -# .w-20
+                -#   = resource_type_name(resource.resource_type_id)
+                -# .w-15
+                -#   %span= resource.assigned_hours(project)
+                -# .w-15
+                -#   %span= project.estimated_hours_for(resource.resource_type_id)
+                -# .w-15
+                -#   %span= project.unallocated_hours_for(resource.resource_type_id)
+          - else
+            .project-assigned-resource.d-flex.mb-2.pb-2.border-bottom.text-center
+              .w-100
+                -
+              -# .w-20
+              -#   = resource_type_name(rt)
+              -# .w-15
+              -#   %span -
+              -# .w-15
+              -#   %span= project.estimated_hours_for(rt)
+              -# .w-15
+              -#   %span= project.unallocated_hours_for(rt)
 
-          .estimation-details.text-center
-            = link_to 'details', project
       .w-25.pl-3.third
         .d-flex.project-dates.mb-2
           .d-flex.w-50.text-left.mr-2.flex-column
@@ -78,11 +76,11 @@
           .d-flex.w-50.text-left.flex-column
             %span.text-uppercase.pr-2= 'END: '
             %span= project.end_date.pretty
-        .d-flex.code-complete.mb-2
-          .w-50.mr-2
-            code complete:
-          .w-50.text-underscore
-            = project.code_complete_date.pretty
+        -# .d-flex.code-complete.mb-2
+        -#   .w-50.mr-2
+        -#     code complete:
+        -#   .w-50.text-underscore
+        -#     = project.code_complete_date.pretty
         .d-flex.project-corrections.flex-column
           %span.mb-1 Adjustments:
 

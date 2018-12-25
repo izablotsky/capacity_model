@@ -6,7 +6,10 @@
         %ul
           - @adjustment.errors.full_messages.each do |message|
             %li= message
-
+  .d-flex.flex-column
+    .flex-fill.pb-2.mb-2.w-100.text-center.border-bottom.shadow-sm.resources-title.pt-2
+      %span.font-weight-bold.text-uppercase
+        New Adjustment:
   .d-flex.flex-row
     .justify-content-start.w-50.pr-4
       .d-flex.flex-column
