@@ -10,7 +10,7 @@ class AdjustmentsController < ApplicationController
 
   def create
     @adjustment = AdjustmentForm.new(adjustment_params)
-
+    @project = Project.find(params[:project_id])
     if @adjustment.save
       redirect_to projects_path, notice: 'Adjustment was successfully created.'
     else
